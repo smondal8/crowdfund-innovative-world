@@ -1,0 +1,54 @@
+server:
+  servlet:
+    context-path: /crowdfundapi
+  port: 8082
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+    server:
+      tomcat:
+        max-http-form-post-size: 200MB
+        max-swallow-size: 200MB
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    table: schema_history_many_service
+    baseline-on-migrate: true
+    validateOnMigrate: false
+    baseline-version: 0.9
+    placeholderReplacement: true
+    placeholders:
+      schemaName: public
+  application:
+    name: crowdfund-innovative-world
+  sql:
+    init:
+      continue-on-error: true
+  datasource:
+    url: jdbc:postgresql://localhost:5433/crowdfunddb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin
+  jpa:
+    show-sql: true
+    properties:
+      hibernate: {id: {new_generator_mappings: true}, hbm2ddl: {auto: validate}, dialect: org.hibernate.dialect.PostgreSQL9Dialect}
+      ddl-auto: validate
+      naming: {strategy: org.hibernate.cfg.ImprovedNamingStrategy}
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "health,info"
+springdoc:
+  api-docs:
+    path: "/openapi"
+
+
+
