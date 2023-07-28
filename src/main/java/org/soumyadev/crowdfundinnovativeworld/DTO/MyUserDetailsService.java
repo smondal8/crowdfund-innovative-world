@@ -1,4 +1,4 @@
-package org.soumyadev.crowdfundinnovativeworld.Models;
+package org.soumyadev.crowdfundinnovativeworld.DTO;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

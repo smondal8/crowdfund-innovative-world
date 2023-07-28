@@ -20,7 +20,7 @@ spring:
     table: schema_history_many_service
     baseline-on-migrate: true
     validateOnMigrate: false
-    baseline-version: 0.9
+    baseline-version: 0.0
     placeholderReplacement: true
     placeholders:
       schemaName: public

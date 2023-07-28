@@ -1,6 +1,6 @@
 package org.soumyadev.crowdfundinnovativeworld.Security;
 
-import org.soumyadev.crowdfundinnovativeworld.Models.MyUserDetailsService;
+import org.soumyadev.crowdfundinnovativeworld.DTO.MyUserDetailsService;
 import org.soumyadev.crowdfundinnovativeworld.Utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
