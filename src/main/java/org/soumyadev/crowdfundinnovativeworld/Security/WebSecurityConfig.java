@@ -53,6 +53,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/csrf").permitAll()
                 .antMatchers("/v2/api-docs").permitAll()
                 .antMatchers("/check").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/checkUserId/*").permitAll()
                 .anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
