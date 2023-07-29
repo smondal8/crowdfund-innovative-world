@@ -38,8 +38,17 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUserValidationException(final UserValidationException exception) {
         CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
                 ErrorMessage.USER_VALIDATION_FAILED);
-        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
+        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getMessage(), exception);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @ExceptionHandler(ProjectNotFound.class)
+    public ResponseEntity<Object> handleProjectNotFound(final ProjectNotFound exception) {
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
+                ErrorMessage.PROJECT_NOT_FOUND);
+        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getMessage(), exception);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 
     }
 

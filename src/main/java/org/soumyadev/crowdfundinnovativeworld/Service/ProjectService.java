@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,10 +44,9 @@ public class ProjectService {
         }
     }
 
-    private void addProjectToList(ProjectDetailsDTO projectDetailsDTO, UsersProjectMappingEntity usersProjectMappingEntity) {
+    public void addProjectToList(ProjectDetailsDTO projectDetailsDTO, UsersProjectMappingEntity usersProjectMappingEntity) {
         ProjectsEntity projectsEntity = usersProjectMappingEntity.getProjectsEntity();
-        long fundsAcquired = projectsEntity.getFundingsEntityList().stream()
-                .collect(Collectors.summingLong(FundingsEntity::getAmount));
+        long fundsAcquired = getFundAcquired(projectsEntity);
         if(fundsAcquired<projectsEntity.getProjectTarget()){
             ProjectsDTO projectsDTO = getProjectsDTO(projectsEntity);
             projectDetailsDTO.getProjects().add(projectsDTO);
@@ -58,7 +56,12 @@ public class ProjectService {
         }
     }
 
-    private ProjectsDTO getProjectsDTO(ProjectsEntity projectsEntity) {
+    public Long getFundAcquired(ProjectsEntity projectsEntity) {
+        return projectsEntity.getFundingsEntityList().stream()
+                .collect(Collectors.summingLong(FundingsEntity::getAmount));
+    }
+
+    public ProjectsDTO getProjectsDTO(ProjectsEntity projectsEntity) {
         ProjectsDTO projectsDTO = new ProjectsDTO();
         projectsDTO.setProjectId(projectsEntity.getProjectId());
         projectsDTO.setProjectName(projectsEntity.getProjectName());
@@ -82,5 +85,9 @@ public class ProjectService {
         usersProjectMappingEntity.setProjectsEntity(projectsEntity);
         usersProjectMappingRepository.save(usersProjectMappingEntity);
 
+    }
+
+    public Optional<ProjectsEntity> getProjectEntity(Long projectId) {
+        return projectsRepository.findById(projectId);
     }
 }
