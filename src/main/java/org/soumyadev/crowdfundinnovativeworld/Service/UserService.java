@@ -58,4 +58,15 @@ public class UserService {
         }
         return userProfileDTO;
     }
+
+    public void updateProfile(String userId,UserProfileDTO userProfileDTOInput) {
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setUserId(userId);
+        usersEntity.setUserName(userProfileDTOInput.getUserName());
+        usersEntity.setAboutMe(userProfileDTOInput.getAboutMe());
+        usersEntity.setCity(userProfileDTOInput.getCity());
+        usersEntity.setPhone(userProfileDTOInput.getPhone());
+        usersEntity.setUserType(userProfileDTOInput.getUserType());
+        usersRepository.save(usersEntity);
+    }
 }

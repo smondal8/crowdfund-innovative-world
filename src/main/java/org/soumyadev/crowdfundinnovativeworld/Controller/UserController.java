@@ -77,7 +77,7 @@ class UserController {
     }
 
     @GetMapping("/fetchUserProfile/{id}")
-    public ResponseEntity<?> getOrUpdateProfile(@PathVariable String id) throws Exception {
+    public ResponseEntity<?> getProfile(@PathVariable String id) throws Exception {
         UserProfileDTO userProfileDto = userService.getProfile(id);
         if(Objects.nonNull(userProfileDto)){
             return ResponseEntity.ok(userProfileDto);
@@ -87,4 +87,15 @@ class UserController {
         }
     }
 
+    @PostMapping("/updateUserProfile/{id}")
+    public ResponseEntity<?> updateProfile(@PathVariable String id,@RequestBody UserProfileDTO userProfileDTOInput) throws Exception {
+        UserProfileDTO userProfileDto = userService.getProfile(id);
+        if(Objects.nonNull(userProfileDto)){
+            userService.updateProfile(id,userProfileDTOInput);
+            return ResponseEntity.ok(userProfileDTOInput);
+        }
+        else{
+            throw new UsernameNotFoundException("User not found !!");
+        }
+    }
 }
