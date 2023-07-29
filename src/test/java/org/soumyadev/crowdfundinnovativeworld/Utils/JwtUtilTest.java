@@ -2,17 +2,12 @@ package org.soumyadev.crowdfundinnovativeworld.Utils;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.soumyadev.crowdfundinnovativeworld.Model.CustomCredDetails;
 
 import java.util.Date;
 
@@ -21,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class JwtUtilTest {
     @Mock
-    private UserDetails userDetails;
+    private CustomCredDetails userDetails;
 
     @InjectMocks
     private JwtUtil jwtUtil;
@@ -36,8 +31,8 @@ public class JwtUtilTest {
 
     @Test
     public void testExtractUsername() {
-        String username = jwtUtil.extractUsername(testToken);
-        Assertions.assertEquals(userDetails.getUsername(), username);
+        String username = jwtUtil.extractUserId(testToken);
+        Assertions.assertEquals(userDetails.getUserId(), username);
     }
 
     @Test
@@ -48,7 +43,7 @@ public class JwtUtilTest {
 
     @Test
     public void testGenerateToken() {
-        when(userDetails.getUsername()).thenReturn("testuser");
+        when(userDetails.getUserId()).thenReturn("testuser");
         String token = jwtUtil.generateToken(userDetails);
         Assertions.assertNotNull(token);
     }
@@ -62,7 +57,7 @@ public class JwtUtilTest {
 
     @Test
     public void testValidateTokenInvalid() {
-        when(userDetails.getUsername()).thenReturn("invaliduser");
+        when(userDetails.getUserId()).thenReturn("invaliduser");
         Boolean isValid = jwtUtil.validateToken(testToken, userDetails);
         Assertions.assertFalse(isValid);
     }

@@ -2,8 +2,12 @@ package org.soumyadev.crowdfundinnovativeworld.Controller;
 
 import org.soumyadev.crowdfundinnovativeworld.DTO.*;
 import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.UserAlreadyExists;
+import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.UserValidationException;
+import org.soumyadev.crowdfundinnovativeworld.Model.CustomCredDetails;
+import org.soumyadev.crowdfundinnovativeworld.Service.UserAuthenticationService;
 import org.soumyadev.crowdfundinnovativeworld.Service.UserService;
 import org.soumyadev.crowdfundinnovativeworld.Utils.JwtUtil;
+import org.soumyadev.crowdfundinnovativeworld.Utils.PasswordEncrypter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +15,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.MBeanRegistrationException;
 import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
-import javax.xml.crypto.Data;
-import java.util.Date;
-import java.util.Optional;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -32,7 +32,7 @@ class UserController {
     private JwtUtil jwtTokenUtil;
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
+    private UserAuthenticationService userDetailsService;
 
     @Autowired
     private UserService userService;
@@ -45,19 +45,23 @@ class UserController {
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
 
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getUsername(), authenticationRequestDTO.getPassword())
-            );
+//        try {
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getUsername(), authenticationRequestDTO.getPassword())
+//            );
+//        }
+//        catch (BadCredentialsException e) {
+//            //throw new ValidationException("Incorrect username or password", e);
+//            return new ResponseEntity(new ValidationException("Incorrect username or password", e), HttpStatus.UNAUTHORIZED);
+//        }
+        final CustomCredDetails userDetails = userDetailsService
+                .loadUserByUsername(authenticationRequestDTO.getUsername()
+                        , authenticationRequestDTO.getPassword());
+        if(Objects.nonNull(userDetails)){
+            final String jwt = jwtTokenUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthenticationResponseDTO(jwt,"soumya","FundRaiser"));
         }
-        catch (BadCredentialsException e) {
-            //throw new ValidationException("Incorrect username or password", e);
-            return new ResponseEntity(new ValidationException("Incorrect username or password", e), HttpStatus.UNAUTHORIZED);
-        }
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequestDTO.getUsername());
-        final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponseDTO(jwt,"Soumya Mondal","soumya","FundRaiser"));
+        throw new UserValidationException("User credential is not valid");
     }
 
     @PostMapping("/register")

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 @Slf4j
@@ -25,7 +26,7 @@ public class UserService {
         return count>0?true:false;
     }
     @Transactional
-    public void registerUser(RegistrationRequestDTO registrationRequestDTO) {
+    public void registerUser(RegistrationRequestDTO registrationRequestDTO) throws NoSuchAlgorithmException {
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setUserId(registrationRequestDTO.getUserId());
         usersEntity.setUserName(registrationRequestDTO.getUserName());
@@ -35,7 +36,8 @@ public class UserService {
         usersEntity = usersRepository.save(usersEntity);
         CredentialsEntity credentialsEntity = new CredentialsEntity();
         credentialsEntity.setUsersEntity(usersEntity);
-        credentialsEntity.setEncryptedPassword(PasswordEncrypter.encrypt(registrationRequestDTO.getPassword()));
+        credentialsEntity.setEncryptedPassword(PasswordEncrypter.hashPassword(registrationRequestDTO.getPassword()));
+        credentialsEntity.setRole(registrationRequestDTO.getUserType());
         credentialRepository.save(credentialsEntity);
 
     }

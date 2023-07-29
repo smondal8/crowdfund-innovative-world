@@ -20,5 +20,7 @@ public class CredentialsEntity implements Serializable {
     private UsersEntity usersEntity;
     @Column(name = "encrypted_password", nullable = false)
     private String encryptedPassword;
+    @Column(name = "role", nullable = false)
+    private String role;
 
 }

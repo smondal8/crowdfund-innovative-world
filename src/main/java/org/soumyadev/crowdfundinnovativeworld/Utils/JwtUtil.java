@@ -3,6 +3,7 @@ package org.soumyadev.crowdfundinnovativeworld.Utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.soumyadev.crowdfundinnovativeworld.Model.CustomCredDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class JwtUtil {
 
     private String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecret";
 
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -38,12 +39,11 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomCredDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-//        claims.put("userid","soumya");
-//        claims.put("username","Soumya Mondal");
-//        claims.put("role","funder");
-        return createToken(claims, userDetails.getUsername());
+        claims.put("username",userDetails.getUserName());
+        claims.put("role",userDetails.getRole());
+        return createToken(claims, userDetails.getUserId());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -53,8 +53,13 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token, CustomCredDetails userDetails) {
+        final String username = extractUserId(token);
+        return (username != null && username.equals(userDetails.getUserId()) && !isTokenExpired(token));
+    }
+
+    public Boolean validateToken(String token, String userId) {
+        final String username = extractUserId(token);
+        return (username != null && username.equals(userId) && !isTokenExpired(token));
     }
 }

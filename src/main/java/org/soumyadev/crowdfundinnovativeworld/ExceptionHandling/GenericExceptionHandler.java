@@ -44,6 +44,15 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(UserValidationException.class)
+    public ResponseEntity<Object> handleUserValidationException(final UserValidationException exception) {
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getLocalizedMessage(),
+                ErrorMessage.USER_VALIDATION_FAILED);
+        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+
+    }
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
@@ -51,6 +60,8 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ErrorMessage.EXCEPTION_OCCURED+ ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 
 
 }

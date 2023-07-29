@@ -73,5 +73,6 @@ CREATE TABLE ${schemaName}.credentials
    cred_id bigint NOT NULL DEFAULT nextval('credentials_seq'::regclass),
    user_id character varying (255),
    encrypted_password character varying (255),
+   role character varying (255),
    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
