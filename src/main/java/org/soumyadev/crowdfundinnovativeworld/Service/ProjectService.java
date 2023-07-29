@@ -7,10 +7,13 @@ import org.soumyadev.crowdfundinnovativeworld.Entity.ProjectsEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.UsersEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.UsersProjectMappingEntity;
 import org.soumyadev.crowdfundinnovativeworld.Repository.ProjectsRepository;
+import org.soumyadev.crowdfundinnovativeworld.Repository.UsersProjectMappingRepository;
 import org.soumyadev.crowdfundinnovativeworld.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +25,13 @@ public class ProjectService {
     UsersRepository usersRepository;
     @Autowired
     ProjectsRepository projectsRepository;
+    @Autowired
+    UsersProjectMappingRepository usersProjectMappingRepository;
     public ProjectDetailsDTO fetchProjects(String userId) {
         ProjectDetailsDTO projectDetailsDTO = new ProjectDetailsDTO();
         projectDetailsDTO.setUserId(userId);
-        projectDetailsDTO.setProjects(Collections.EMPTY_LIST);
-        projectDetailsDTO.setArchivedProjects(Collections.EMPTY_LIST);
+        projectDetailsDTO.setProjects(new ArrayList<ProjectsDTO>());
+        projectDetailsDTO.setArchivedProjects(new ArrayList<ProjectsDTO>());
         Optional<UsersEntity> userEntity = usersRepository.findByUserId(userId);
         if(userEntity.isPresent()){
             List<UsersProjectMappingEntity> listmapping = userEntity.get().getUsersProjectMappingEntityList();
@@ -61,5 +66,21 @@ public class ProjectService {
         projectsDTO.setProjectArea(projectsEntity.getProjectArea());
         projectsDTO.setProjectTarget(projectsEntity.getProjectTarget());
         return projectsDTO;
+    }
+
+    @Transactional
+    public void createProject(String userId, ProjectsDTO projectsDTO) {
+        Optional<UsersEntity> usersEntity = usersRepository.findByUserId(userId);
+        ProjectsEntity projectsEntity = new ProjectsEntity();
+        projectsEntity.setProjectName(projectsDTO.getProjectName());
+        projectsEntity.setProjectDescription(projectsDTO.getProjectDescription());
+        projectsEntity.setProjectArea(projectsDTO.getProjectArea());
+        projectsEntity.setProjectTarget(projectsDTO.getProjectTarget());
+        projectsEntity = projectsRepository.save(projectsEntity);
+        UsersProjectMappingEntity usersProjectMappingEntity = new UsersProjectMappingEntity();
+        usersProjectMappingEntity.setUsersEntity(usersEntity.get());
+        usersProjectMappingEntity.setProjectsEntity(projectsEntity);
+        usersProjectMappingRepository.save(usersProjectMappingEntity);
+
     }
 }

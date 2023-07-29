@@ -2,6 +2,7 @@ package org.soumyadev.crowdfundinnovativeworld.Controller;
 
 import org.soumyadev.crowdfundinnovativeworld.DTO.GenericResponseDTO;
 import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectDetailsDTO;
+import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsDTO;
 import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.UserAlreadyExists;
 import org.soumyadev.crowdfundinnovativeworld.Repository.ProjectsRepository;
 import org.soumyadev.crowdfundinnovativeworld.Repository.UsersRepository;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -29,6 +27,17 @@ class ProjectController {
         if(userService.checkUser(userId)){
             ProjectDetailsDTO projectDetailsDTO = projectService.fetchProjects(userId);
             return ResponseEntity.ok(projectDetailsDTO);
+        }
+        else{
+            throw new UsernameNotFoundException("User not found !!");
+        }
+    }
+
+    @PostMapping("/createProject/{userId}")
+    public ResponseEntity<?> createProject(@PathVariable String userId, @RequestBody ProjectsDTO projectsDTO) throws Exception {
+        if(userService.checkUser(userId)){
+            projectService.createProject(userId,projectsDTO);
+            return ResponseEntity.ok("Project is created successfully!!");
         }
         else{
             throw new UsernameNotFoundException("User not found !!");
