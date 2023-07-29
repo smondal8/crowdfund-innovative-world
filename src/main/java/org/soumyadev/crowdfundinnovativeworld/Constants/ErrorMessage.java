@@ -6,4 +6,5 @@ public class ErrorMessage {
     public static final String VALIDATION_FAILED = "Validation Failed";
     public static final String USER_ALREADY_EXISTS = "User Already Exists" ;
     public static final String USER_VALIDATION_FAILED = "User Validation Failed";
+    public static final String USER_NOT_FOUND = "User not found";
 }

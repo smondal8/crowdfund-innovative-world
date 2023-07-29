@@ -25,38 +25,37 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Object> handleValidationException(final ValidationException exception) {
-        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
-                ErrorMessage.VALIDATION_FAILED);
-        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
-
-    }
-
-
     @ExceptionHandler(UserAlreadyExists.class)
     public ResponseEntity<Object> handleUserNotFoundException(final UserAlreadyExists exception) {
-        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getLocalizedMessage(),
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
                 ErrorMessage.USER_ALREADY_EXISTS);
         log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
 
     }
 
     @ExceptionHandler(UserValidationException.class)
     public ResponseEntity<Object> handleUserValidationException(final UserValidationException exception) {
-        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getLocalizedMessage(),
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
                 ErrorMessage.USER_VALIDATION_FAILED);
         log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(final UsernameNotFoundException exception) {
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
+                ErrorMessage.USER_NOT_FOUND);
+        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getLocalizedMessage(), exception);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 
     }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                ex.getMessage());
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()
+                );
         log.error(ErrorMessage.EXCEPTION_OCCURED+ ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

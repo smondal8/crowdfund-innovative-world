@@ -3,6 +3,7 @@ package org.soumyadev.crowdfundinnovativeworld.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.soumyadev.crowdfundinnovativeworld.DTO.RegistrationRequestDTO;
+import org.soumyadev.crowdfundinnovativeworld.DTO.UserProfileDTO;
 import org.soumyadev.crowdfundinnovativeworld.Entity.CredentialsEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.UsersEntity;
 import org.soumyadev.crowdfundinnovativeworld.Repository.CredentialRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -40,5 +42,20 @@ public class UserService {
         credentialsEntity.setRole(registrationRequestDTO.getUserType());
         credentialRepository.save(credentialsEntity);
 
+    }
+
+    public UserProfileDTO getProfile(String id) {
+        UserProfileDTO userProfileDTO = null;
+        Optional<UsersEntity> userEntityOptional = usersRepository.findByUserId(id);
+        if(userEntityOptional.isPresent()){
+            UsersEntity usersEntity = userEntityOptional.get();
+            userProfileDTO = new UserProfileDTO();
+            userProfileDTO.setUserName(usersEntity.getUserName());
+            userProfileDTO.setAboutMe(usersEntity.getAboutMe());
+            userProfileDTO.setCity(usersEntity.getCity());
+            userProfileDTO.setPhone(usersEntity.getPhone());
+            userProfileDTO.setUserType(usersEntity.getUserType());
+        }
+        return userProfileDTO;
     }
 }

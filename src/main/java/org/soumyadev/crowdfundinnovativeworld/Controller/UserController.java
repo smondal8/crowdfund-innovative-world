@@ -7,18 +7,14 @@ import org.soumyadev.crowdfundinnovativeworld.Model.CustomCredDetails;
 import org.soumyadev.crowdfundinnovativeworld.Service.UserAuthenticationService;
 import org.soumyadev.crowdfundinnovativeworld.Service.UserService;
 import org.soumyadev.crowdfundinnovativeworld.Utils.JwtUtil;
-import org.soumyadev.crowdfundinnovativeworld.Utils.PasswordEncrypter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.xml.bind.ValidationException;
 import java.util.Objects;
 
 @RestController
@@ -77,6 +73,17 @@ class UserController {
         }
         else{
             throw new UserAlreadyExists("Username already exist please choose something else!");
+        }
+    }
+
+    @GetMapping("/fetchUserProfile/{id}")
+    public ResponseEntity<?> getOrUpdateProfile(@PathVariable String id) throws Exception {
+        UserProfileDTO userProfileDto = userService.getProfile(id);
+        if(Objects.nonNull(userProfileDto)){
+            return ResponseEntity.ok(userProfileDto);
+        }
+        else{
+            throw new UsernameNotFoundException("User not found !!");
         }
     }
 
