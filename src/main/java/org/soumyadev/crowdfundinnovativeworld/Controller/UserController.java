@@ -37,10 +37,10 @@ class UserController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping({ "/hello" })
-//    public String firstPage() {
-//        return "Hello World";
-//    }
+    @GetMapping({ "/hello" })
+    public String firstPage() {
+        return "Hello World";
+    }
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
