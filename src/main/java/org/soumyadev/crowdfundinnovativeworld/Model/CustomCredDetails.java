@@ -9,4 +9,5 @@ public class CustomCredDetails {
     String userId;
     String role;
     String userName;
+    String jwt;
 }

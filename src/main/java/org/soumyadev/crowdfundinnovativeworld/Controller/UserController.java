@@ -40,22 +40,13 @@ class UserController {
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequestDTO authenticationRequestDTO) throws Exception {
-
-//        try {
-//            authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(authenticationRequestDTO.getUsername(), authenticationRequestDTO.getPassword())
-//            );
-//        }
-//        catch (BadCredentialsException e) {
-//            //throw new ValidationException("Incorrect username or password", e);
-//            return new ResponseEntity(new ValidationException("Incorrect username or password", e), HttpStatus.UNAUTHORIZED);
-//        }
         final CustomCredDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequestDTO.getUsername()
                         , authenticationRequestDTO.getPassword());
         if(Objects.nonNull(userDetails)){
             final String jwt = jwtTokenUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthenticationResponseDTO(jwt,"soumya","FundRaiser"));
+            userDetails.setJwt(jwt);
+            return ResponseEntity.ok(userDetails);
         }
         throw new UserValidationException("User credential is not valid");
     }

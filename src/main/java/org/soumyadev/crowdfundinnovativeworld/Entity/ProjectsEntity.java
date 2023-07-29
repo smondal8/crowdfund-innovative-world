@@ -26,8 +26,10 @@ public class ProjectsEntity implements Serializable {
     private String projectArea;
     @Column(name = "project_target")
     private long projectTarget;
+    @OneToOne(mappedBy = "projectsEntity", cascade= CascadeType.ALL)
+    private UsersProjectMappingEntity usersProjectMappingEntity;
     @OneToMany(mappedBy = "projectsEntity", cascade= CascadeType.ALL)
-    private List<UsersProjectMappingEntity> usersProjectMappingEntityList;
+    private List<FundingsEntity> fundingsEntityList;
 
 }
 

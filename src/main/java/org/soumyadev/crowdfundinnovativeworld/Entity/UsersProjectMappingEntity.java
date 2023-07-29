@@ -18,7 +18,7 @@ public class UsersProjectMappingEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id" ,referencedColumnName = "user_id",nullable = false)
     private UsersEntity usersEntity;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "project_id" ,referencedColumnName = "project_id",nullable = false)
     private ProjectsEntity projectsEntity;
 

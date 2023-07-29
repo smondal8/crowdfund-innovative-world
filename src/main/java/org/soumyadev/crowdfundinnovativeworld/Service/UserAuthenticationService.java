@@ -29,7 +29,7 @@ public class UserAuthenticationService implements UserDetailsService {
         List<CredentialsEntity> creds = credentialRepository.findAll().stream().filter(cred -> cred.getUsersEntity().getUserId().equals(userId)).collect(Collectors.toList());
         if(Objects.nonNull(creds) && creds.size()>0 && PasswordEncrypter.checkPassword(rawPassword,creds.get(0).getEncryptedPassword())){
             return new CustomCredDetails(creds.get(0).getUsersEntity().getUserId()
-                    ,creds.get(0).getRole(),creds.get(0).getUsersEntity().getUserName());
+                    ,creds.get(0).getRole(),creds.get(0).getUsersEntity().getUserName(),null);
         }
         return null;
     }
