@@ -44,4 +44,19 @@ class FundController {
             throw new ProjectNotFound("Project not found !!");
         }
     }
+
+    @GetMapping("/pendingAmount/{projectId}")
+    public ResponseEntity<?> pendingAmount(@PathVariable Long projectId) throws Exception {
+        Optional<ProjectsEntity> projectsEntityOptional = projectService.getProjectEntity(projectId);
+        if(projectsEntityOptional.isPresent()){
+            ProjectsEntity projectEntity = projectsEntityOptional.get();
+            Long acquired = projectService.getFundAcquired(projectEntity);
+            FundDTO fundDTO = new FundDTO();
+            fundDTO.setAmount(projectEntity.getProjectTarget()-acquired);
+            return ResponseEntity.ok(fundDTO);
+        }
+        else{
+            throw new ProjectNotFound("Project not found !!");
+        }
+    }
 }
