@@ -37,7 +37,7 @@ class ProjectController {
     public ResponseEntity<?> createProject(@PathVariable String userId, @RequestBody ProjectsDTO projectsDTO) throws Exception {
         if(userService.checkUser(userId)){
             projectService.createProject(userId,projectsDTO);
-            return ResponseEntity.ok("Project is created successfully!!");
+            return ResponseEntity.ok(projectsDTO);
         }
         else{
             throw new UsernameNotFoundException("User not found !!");
