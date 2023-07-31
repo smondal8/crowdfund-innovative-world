@@ -32,7 +32,7 @@ class FundController {
             }
             else{
                 fundsService.makeFund(projectEntity,fundDTO.getAmount());
-                return ResponseEntity.ok("Fund invested!!");
+                return ResponseEntity.ok(fundDTO);
             }
         }
         else{
