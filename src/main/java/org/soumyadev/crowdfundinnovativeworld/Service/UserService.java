@@ -35,6 +35,7 @@ public class UserService {
         usersEntity.setUserType(registrationRequestDTO.getUserType());
         usersEntity.setCity(registrationRequestDTO.getCity());
         usersEntity.setPhone(registrationRequestDTO.getPhoneNumber());
+        usersEntity.setAboutMe(registrationRequestDTO.getAboutMe());
         usersEntity = usersRepository.save(usersEntity);
         CredentialsEntity credentialsEntity = new CredentialsEntity();
         credentialsEntity.setUsersEntity(usersEntity);

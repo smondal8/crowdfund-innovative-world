@@ -1,0 +1,1 @@
+ALTER TABLE ${schemaName}.credentials ADD PRIMARY KEY (user_id);
