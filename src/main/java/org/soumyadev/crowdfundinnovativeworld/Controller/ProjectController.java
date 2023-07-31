@@ -1,7 +1,7 @@
 package org.soumyadev.crowdfundinnovativeworld.Controller;
 
 import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectDetailsDTO;
-import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsDTO;
+import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsFundingDTO;
 import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsFundingDTO;
 import org.soumyadev.crowdfundinnovativeworld.Entity.FundingsEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.ProjectsEntity;
@@ -65,7 +65,7 @@ class ProjectController {
     }
 
     @PostMapping("/createProject/{userId}")
-    public ResponseEntity<?> createProject(@PathVariable String userId, @RequestBody ProjectsDTO projectsDTO) throws Exception {
+    public ResponseEntity<?> createProject(@PathVariable String userId, @RequestBody ProjectsFundingDTO projectsDTO) throws Exception {
         if(userService.checkUser(userId)){
             projectService.createProject(userId,projectsDTO);
             return ResponseEntity.ok(projectsDTO);

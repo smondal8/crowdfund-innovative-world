@@ -7,6 +7,6 @@ import java.util.List;
 @Data
 public class ProjectDetailsDTO {
     private String userId;
-    List<ProjectsDTO> projects;
-    List<ProjectsDTO> archivedProjects;
+    List<ProjectsFundingDTO> projects;
+    List<ProjectsFundingDTO> archivedProjects;
 }

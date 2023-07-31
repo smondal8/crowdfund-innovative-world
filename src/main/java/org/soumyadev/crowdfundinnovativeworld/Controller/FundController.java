@@ -1,7 +1,6 @@
 package org.soumyadev.crowdfundinnovativeworld.Controller;
 
 import org.soumyadev.crowdfundinnovativeworld.DTO.FundDTO;
-import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsDTO;
 import org.soumyadev.crowdfundinnovativeworld.Entity.ProjectsEntity;
 import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.ProjectNotFound;
 import org.soumyadev.crowdfundinnovativeworld.Service.FundsService;

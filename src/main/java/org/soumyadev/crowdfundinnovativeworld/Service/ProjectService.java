@@ -1,7 +1,7 @@
 package org.soumyadev.crowdfundinnovativeworld.Service;
 
 import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectDetailsDTO;
-import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsDTO;
+import org.soumyadev.crowdfundinnovativeworld.DTO.ProjectsFundingDTO;
 import org.soumyadev.crowdfundinnovativeworld.Entity.FundingsEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.ProjectsEntity;
 import org.soumyadev.crowdfundinnovativeworld.Entity.UsersEntity;
@@ -29,8 +29,8 @@ public class ProjectService {
     public ProjectDetailsDTO fetchProjects(String userId) {
         ProjectDetailsDTO projectDetailsDTO = new ProjectDetailsDTO();
         projectDetailsDTO.setUserId(userId);
-        projectDetailsDTO.setProjects(new ArrayList<ProjectsDTO>());
-        projectDetailsDTO.setArchivedProjects(new ArrayList<ProjectsDTO>());
+        projectDetailsDTO.setProjects(new ArrayList<ProjectsFundingDTO>());
+        projectDetailsDTO.setArchivedProjects(new ArrayList<ProjectsFundingDTO>());
         Optional<UsersEntity> userEntity = usersRepository.findByUserId(userId);
         if(userEntity.isPresent()){
             List<UsersProjectMappingEntity> listmapping = userEntity.get().getUsersProjectMappingEntityList();
@@ -48,11 +48,11 @@ public class ProjectService {
         ProjectsEntity projectsEntity = usersProjectMappingEntity.getProjectsEntity();
         long fundsAcquired = getFundAcquired(projectsEntity);
         if(fundsAcquired<projectsEntity.getProjectTarget()){
-            ProjectsDTO projectsDTO = getProjectsDTO(projectsEntity);
+            ProjectsFundingDTO projectsDTO = getProjectsDTO(projectsEntity,fundsAcquired);
             projectDetailsDTO.getProjects().add(projectsDTO);
         }else{
-            ProjectsDTO projectsDTO = getProjectsDTO(projectsEntity);
-            projectDetailsDTO.getArchivedProjects().add(projectsDTO);
+            ProjectsFundingDTO ProjectsFundingDTO = getProjectsDTO(projectsEntity,fundsAcquired);
+            projectDetailsDTO.getArchivedProjects().add(ProjectsFundingDTO);
         }
     }
 
@@ -61,24 +61,25 @@ public class ProjectService {
                 .collect(Collectors.summingLong(FundingsEntity::getAmount));
     }
 
-    public ProjectsDTO getProjectsDTO(ProjectsEntity projectsEntity) {
-        ProjectsDTO projectsDTO = new ProjectsDTO();
-        projectsDTO.setProjectId(projectsEntity.getProjectId());
-        projectsDTO.setProjectName(projectsEntity.getProjectName());
-        projectsDTO.setProjectDescription(projectsEntity.getProjectDescription());
-        projectsDTO.setProjectArea(projectsEntity.getProjectArea());
-        projectsDTO.setProjectTarget(projectsEntity.getProjectTarget());
-        return projectsDTO;
+    public ProjectsFundingDTO getProjectsDTO(ProjectsEntity projectsEntity, long fundsAcquired) {
+        ProjectsFundingDTO projectFundingDTO = new ProjectsFundingDTO();
+        projectFundingDTO.setProjectId(projectsEntity.getProjectId());
+        projectFundingDTO.setProjectName(projectsEntity.getProjectName());
+        projectFundingDTO.setProjectDescription(projectsEntity.getProjectDescription());
+        projectFundingDTO.setProjectArea(projectsEntity.getProjectArea());
+        projectFundingDTO.setProjectTarget(projectsEntity.getProjectTarget());
+        projectFundingDTO.setProjectAcquired(fundsAcquired);
+        return projectFundingDTO;
     }
 
     @Transactional
-    public void createProject(String userId, ProjectsDTO projectsDTO) {
+    public void createProject(String userId, ProjectsFundingDTO ProjectsFundingDTO) {
         Optional<UsersEntity> usersEntity = usersRepository.findByUserId(userId);
         ProjectsEntity projectsEntity = new ProjectsEntity();
-        projectsEntity.setProjectName(projectsDTO.getProjectName());
-        projectsEntity.setProjectDescription(projectsDTO.getProjectDescription());
-        projectsEntity.setProjectArea(projectsDTO.getProjectArea());
-        projectsEntity.setProjectTarget(projectsDTO.getProjectTarget());
+        projectsEntity.setProjectName(ProjectsFundingDTO.getProjectName());
+        projectsEntity.setProjectDescription(ProjectsFundingDTO.getProjectDescription());
+        projectsEntity.setProjectArea(ProjectsFundingDTO.getProjectArea());
+        projectsEntity.setProjectTarget(ProjectsFundingDTO.getProjectTarget());
         projectsEntity = projectsRepository.save(projectsEntity);
         UsersProjectMappingEntity usersProjectMappingEntity = new UsersProjectMappingEntity();
         usersProjectMappingEntity.setUsersEntity(usersEntity.get());
