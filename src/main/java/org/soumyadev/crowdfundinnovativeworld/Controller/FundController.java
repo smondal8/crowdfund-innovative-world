@@ -8,13 +8,9 @@ import org.soumyadev.crowdfundinnovativeworld.Service.FundsService;
 import org.soumyadev.crowdfundinnovativeworld.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Objects.nonNull;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")

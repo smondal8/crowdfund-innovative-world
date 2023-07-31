@@ -90,4 +90,8 @@ public class ProjectService {
     public Optional<ProjectsEntity> getProjectEntity(Long projectId) {
         return projectsRepository.findById(projectId);
     }
+
+    public List<ProjectsEntity> fetchAllProjects() {
+        return projectsRepository.findAll();
+    }
 }
