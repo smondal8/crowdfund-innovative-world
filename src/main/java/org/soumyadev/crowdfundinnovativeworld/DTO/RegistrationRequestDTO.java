@@ -1,7 +1,6 @@
 package org.soumyadev.crowdfundinnovativeworld.DTO;
 
 import lombok.Data;
-import org.soumyadev.crowdfundinnovativeworld.Utils.UserType;
 
 @Data
 public class RegistrationRequestDTO {

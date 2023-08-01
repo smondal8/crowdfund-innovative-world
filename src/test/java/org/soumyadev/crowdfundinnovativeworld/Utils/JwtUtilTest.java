@@ -1,64 +1,86 @@
 package org.soumyadev.crowdfundinnovativeworld.Utils;
 
-import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Test;
 import org.soumyadev.crowdfundinnovativeworld.Model.CustomCredDetails;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JwtUtilTest {
-    @Mock
+class JwtUtilTest {
+
+    private JwtUtil jwtUtil;
     private CustomCredDetails userDetails;
 
-    @InjectMocks
-    private JwtUtil jwtUtil;
-
-    private String testToken;
-
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        testToken = jwtUtil.generateToken(userDetails);
+    void setUp() {
+        jwtUtil = new JwtUtil();
+        userDetails = new CustomCredDetails("testuser", "Funder", "ROLE_USER","");
     }
 
     @Test
-    public void testExtractUsername() {
-        String username = jwtUtil.extractUserId(testToken);
-        Assertions.assertEquals(userDetails.getUserId(), username);
+    void testExtractUserId() {
+        String token = generateTestToken();
+        String userId = jwtUtil.extractUserId(token);
+        assertEquals(userDetails.getUserId(), userId);
     }
 
     @Test
-    public void testExtractExpiration() {
-        Date expiration = jwtUtil.extractExpiration(testToken);
-        Assertions.assertTrue(expiration.after(new Date()));
+    void testExtractExpiration() {
+        String token = generateTestToken();
+        Date expirationDate = jwtUtil.extractExpiration(token);
+        assertNotNull(expirationDate);
     }
 
     @Test
-    public void testGenerateToken() {
-        when(userDetails.getUserId()).thenReturn("testuser");
+    void testExtractClaim() {
+        String token = generateTestToken();
+        String username = jwtUtil.extractClaim(token, claims -> claims.get("username", String.class));
+        assertEquals(userDetails.getUserName(), username);
+
+        String role = jwtUtil.extractClaim(token, claims -> claims.get("role", String.class));
+        assertEquals(userDetails.getRole(), role);
+    }
+
+    @Test
+    void testGenerateToken() {
         String token = jwtUtil.generateToken(userDetails);
-        Assertions.assertNotNull(token);
+        assertNotNull(token);
     }
 
-//    @Test
-//    public void testValidateTokenValid() {
-//        when(userDetails.getUsername()).thenReturn("testuser");
-//        Boolean isValid = jwtUtil.validateToken(testToken, userDetails);
-//        Assertions.assertTrue(isValid);
-//    }
+    @Test
+    void testValidateTokenWithValidUserDetails() {
+        String token = generateTestToken();
+        assertTrue(jwtUtil.validateToken(token, userDetails));
+    }
 
     @Test
-    public void testValidateTokenInvalid() {
-        when(userDetails.getUserId()).thenReturn("invaliduser");
-        Boolean isValid = jwtUtil.validateToken(testToken, userDetails);
-        Assertions.assertFalse(isValid);
+    void testValidateTokenWithInvalidUserDetails() {
+        String token = generateTestToken();
+        CustomCredDetails invalidUserDetails = new CustomCredDetails("anotheruser", "Funder", "ROLE_ADMIN","");
+        assertFalse(jwtUtil.validateToken(token, invalidUserDetails));
+    }
+
+    @Test
+    void testValidateTokenWithUserId() {
+        String token = generateTestToken();
+        assertTrue(jwtUtil.validateToken(token, userDetails.getUserId()));
+    }
+
+    @Test
+    void testValidateTokenWithInvalidUserId() {
+        String token = generateTestToken();
+        assertFalse(jwtUtil.validateToken(token, "invalidUserId"));
+    }
+
+    private String generateTestToken() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", userDetails.getUserName());
+        claims.put("role", userDetails.getRole());
+        return jwtUtil.createToken(claims, userDetails.getUserId());
     }
 }

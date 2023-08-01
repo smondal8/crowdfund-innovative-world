@@ -1,7 +1,6 @@
 package org.soumyadev.crowdfundinnovativeworld.Entity;
 
 import lombok.Data;
-import org.soumyadev.crowdfundinnovativeworld.Utils.UserType;
 
 import javax.persistence.*;
 import java.io.Serializable;

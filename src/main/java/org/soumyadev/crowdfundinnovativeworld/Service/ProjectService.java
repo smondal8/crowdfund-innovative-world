@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,9 @@ public class ProjectService {
         long fundsAcquired = getFundAcquired(projectsEntity);
         if(fundsAcquired<projectsEntity.getProjectTarget()){
             ProjectsFundingDTO projectsDTO = getProjectsDTO(projectsEntity,fundsAcquired);
+            if(Objects.isNull(projectDetailsDTO.getProjects())){
+                projectDetailsDTO.setProjects(new ArrayList<ProjectsFundingDTO>());
+            }
             projectDetailsDTO.getProjects().add(projectsDTO);
         }else{
             ProjectsFundingDTO ProjectsFundingDTO = getProjectsDTO(projectsEntity,fundsAcquired);
@@ -57,8 +61,12 @@ public class ProjectService {
     }
 
     public Long getFundAcquired(ProjectsEntity projectsEntity) {
-        return projectsEntity.getFundingsEntityList().stream()
-                .collect(Collectors.summingLong(FundingsEntity::getAmount));
+        Optional<List<FundingsEntity>> optionalNames = Optional.ofNullable(projectsEntity.getFundingsEntityList());
+        if(optionalNames.isPresent()){
+            return projectsEntity.getFundingsEntityList().stream()
+                    .collect(Collectors.summingLong(FundingsEntity::getAmount));
+        }
+        return 0L;
     }
 
     public ProjectsFundingDTO getProjectsDTO(ProjectsEntity projectsEntity, long fundsAcquired) {
