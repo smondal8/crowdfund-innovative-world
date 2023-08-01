@@ -23,7 +23,7 @@ class FundController {
     @PostMapping("/makeFunds/{projectId}")
     public ResponseEntity<?> makeFunds(@PathVariable Long projectId, @RequestBody FundDTO fundDTO) throws Exception {
         Optional<ProjectsEntity> projectsEntityOptional = projectService.getProjectEntity(projectId);
-        if(projectsEntityOptional.isPresent()){
+        if(!projectsEntityOptional.isEmpty()){
             ProjectsEntity projectEntity = projectsEntityOptional.get();
             Long acquired = projectService.getFundAcquired(projectEntity);
             if(fundDTO.getAmount()<=0 || fundDTO.getAmount()>projectEntity.getProjectTarget()-acquired){
@@ -43,7 +43,7 @@ class FundController {
     @GetMapping("/pendingAmount/{projectId}")
     public ResponseEntity<?> pendingAmount(@PathVariable Long projectId) throws Exception {
         Optional<ProjectsEntity> projectsEntityOptional = projectService.getProjectEntity(projectId);
-        if(projectsEntityOptional.isPresent()){
+        if(!projectsEntityOptional.isEmpty()){
             ProjectsEntity projectEntity = projectsEntityOptional.get();
             Long acquired = projectService.getFundAcquired(projectEntity);
             FundDTO fundDTO = new FundDTO();
