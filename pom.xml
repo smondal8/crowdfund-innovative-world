@@ -21,8 +21,8 @@
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../target/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.language>java</sonar.language>
-<!--		<sonar.exclusions>**/abcdService/Service/**/*,**/abcdService/Service/**/*,**/abcdService/Service/**/*</sonar.exclusions>-->
-<!--		<sonar.coverage.exclusions>**/abcdService/Service/**/*,**/abcdService/Service/**/*,**/abcdService/Service/**/</sonar.coverage.exclusions>-->
+		<sonar.exclusions>**/crowdfundinnovativeworld/Constants/**/*,**/crowdfundinnovativeworld/DTO/**/*,**/crowdfundinnovativeworld/Entity/**/*,**/crowdfundinnovativeworld/ExceptionHandling/**/*,**/crowdfundinnovativeworld/Model/**/*,**/crowdfundinnovativeworld/Security/**/*,**/crowdfundinnovativeworld/CrowdfundInnovativeWorldApplication</sonar.exclusions>
+		<sonar.coverage.exclusions>**/crowdfundinnovativeworld/Constants/**/*,**/crowdfundinnovativeworld/DTO/**/*,**/crowdfundinnovativeworld/Entity/**/*,**/crowdfundinnovativeworld/ExceptionHandling/**/*,**/crowdfundinnovativeworld/Model/**/*,**/crowdfundinnovativeworld/Security/**/*,**/crowdfundinnovativeworld/CrowdfundInnovativeWorldApplication</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -139,16 +139,15 @@
 					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
 					<output>file</output>
 					<append>true</append>
-<!--					<excludes>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--						<exclude>**/abc/integration/**/*</exclude>-->
-<!--					</excludes>-->
+					<excludes>
+						<exclude>**/crowdfundinnovativeworld/Constants/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/DTO/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/Entity/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/ExceptionHandling/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/Model/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/Security/**/*</exclude>
+						<exclude>**/crowdfundinnovativeworld/CrowdfundInnovativeWorldApplication</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
@@ -169,7 +168,7 @@
 										<limit>
 											<counter>INSTRUCTION</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.00</minimum>
+											<minimum>0.0</minimum>
 										</limit>
 									</limits>
 								</rule>
