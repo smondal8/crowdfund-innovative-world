@@ -52,6 +52,15 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+    @ExceptionHandler(InvalidFundException.class)
+    public ResponseEntity<Object> handleInvalidFundException(final InvalidFundException exception) {
+        CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),
+                ErrorMessage.INVALID_FUND);
+        log.error(ErrorMessage.EXCEPTION_OCCURED+ exception.getMessage(), exception);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+
+    }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<Object> handleUsernameNotFoundException(final UsernameNotFoundException exception) {
         CustomExceptionResponse exceptionResponse = new CustomExceptionResponse(new Date(), exception.getMessage(),

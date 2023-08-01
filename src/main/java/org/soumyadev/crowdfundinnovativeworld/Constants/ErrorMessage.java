@@ -8,4 +8,5 @@ public class ErrorMessage {
     public static final String USER_VALIDATION_FAILED = "User Validation Failed";
     public static final String USER_NOT_FOUND = "User not found !!";
     public static final String PROJECT_NOT_FOUND = "Project not found !!";
+    public static final String INVALID_FUND = "Invalid fund !!";
 }
