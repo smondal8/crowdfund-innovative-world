@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.soumyadev.crowdfundinnovativeworld.DTO.FundDTO;
 import org.soumyadev.crowdfundinnovativeworld.Entity.ProjectsEntity;
+import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.InvalidFundException;
 import org.soumyadev.crowdfundinnovativeworld.ExceptionHandling.ProjectNotFound;
 import org.soumyadev.crowdfundinnovativeworld.Service.FundsService;
 import org.soumyadev.crowdfundinnovativeworld.Service.ProjectService;
@@ -67,13 +68,14 @@ class FundControllerTest {
         when(projectService.getProjectEntity(projectId)).thenReturn(Optional.of(projectEntity));
         when(projectService.getFundAcquired(projectEntity)).thenReturn(800L);
 
-        // Test
-        ResponseEntity<?> response = fundController.makeFunds(projectId, fundDTO);
-
         // Verify
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Could not be funded since amount is less or equal to zero or more than remaining amount of fulfillment", response.getBody());
+        InvalidFundException exception = org.junit.jupiter.api.Assertions.assertThrows(
+                InvalidFundException.class,
+                () -> fundController.makeFunds(projectId, fundDTO)
+        );
+        //assertEquals("Could not be funded since amount is less or equal to zero or more than remaining amount of fulfillment", response.getBody());
         verify(fundsService, never()).makeFund(projectEntity, 1000L);
+        assertEquals("Could not be funded since amount is less or equal to zero or more than remaining amount of fulfillment", exception.getMessage());
     }
 
     @Test

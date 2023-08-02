@@ -15,7 +15,7 @@ public class UsersProjectMappingEntity implements Serializable {
     @SequenceGenerator(name = "MAPPING_ID_GENERATOR", sequenceName = "users_projects_mapping_seq", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAPPING_ID_GENERATOR")
     private Long mappingId;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id" ,referencedColumnName = "user_id",nullable = false)
     private UsersEntity usersEntity;
     @OneToOne(cascade = CascadeType.PERSIST)
