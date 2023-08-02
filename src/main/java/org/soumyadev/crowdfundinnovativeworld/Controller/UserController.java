@@ -18,7 +18,6 @@ import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 class UserController {
 
     @Autowired

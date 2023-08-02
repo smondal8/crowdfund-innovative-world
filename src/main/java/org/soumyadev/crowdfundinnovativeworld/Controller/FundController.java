@@ -14,7 +14,6 @@ import javax.xml.bind.ValidationException;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 class FundController {
     @Autowired
     ProjectService projectService;
